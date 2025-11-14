@@ -24,11 +24,11 @@ abstract class RenderLoop(val system: VulkanSystem) extends AutoCloseable, Runna
 
     while (window.pullEvents()) {
 
-      cpuUpdate()
+      compute()
 
       inFlightFence.await().reset()
 
-      gpuUpdate()
+      synchronize()
 
       val next = swapChain.acquireNextImage(imageAvailableSemaphore) // waiting
       for (q <- next.presentResult) presentResult(q)
@@ -44,9 +44,9 @@ abstract class RenderLoop(val system: VulkanSystem) extends AutoCloseable, Runna
 
   }
 
-  protected def cpuUpdate():Unit = {}
+  protected def compute():Unit = {}
 
-  protected def gpuUpdate():Unit = {}
+  protected def synchronize():Unit = {}
 
   protected def record(next:NextFrame):CommandBuffer
 

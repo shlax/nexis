@@ -141,7 +141,7 @@ object MainCube extends Runnable{
           new RenderLoop(sys){
 
             // cpu calc
-            override protected def cpuUpdate(): Unit = {
+            override protected def compute(): Unit = {
               camera.update(cameraPoint)
             }
 
