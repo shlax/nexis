@@ -145,24 +145,23 @@ object MainCube extends Runnable{
               camera.update(cameraPoint)
             }
 
-            override protected def record(next:NextFrame): CommandBuffer = {
-              render.record(next) { (stack, buff) =>
-                triangle.bindPipeline(buff)
+            override protected def record(next:NextFrame): CommandBuffer = render.record(next) { (stack, buff) =>
+              triangle.bindPipeline(buff)
 
-                val viewBuff = stack.callocFloat(2 * 4 * 4)
-                camera.viewMatrix.toFloatBuffer(viewBuff)
-                camera.rotationMatrix.toFloatBuffer(viewBuff)
-                viewBuff.flip()
+              val viewBuff = stack.callocFloat(2 * 4 * 4)
+              camera.viewMatrix.toFloatBuffer(viewBuff)
+              camera.rotationMatrix.toFloatBuffer(viewBuff)
+              viewBuff.flip()
 
-                VK10.vkCmdPushConstants(buff, pipelineLayout.vkPipelineLayout, VK10.VK_SHADER_STAGE_VERTEX_BIT, 0, viewBuff)
+              VK10.vkCmdPushConstants(buff, pipelineLayout.vkPipelineLayout, VK10.VK_SHADER_STAGE_VERTEX_BIT, 0, viewBuff)
 
-                VK10.vkCmdBindDescriptorSets(buff, VK10.VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout.vkPipelineLayout, 0, stack.longs(descriptorSet.vkDescriptorSet), null)
+              VK10.vkCmdBindDescriptorSets(buff, VK10.VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout.vkPipelineLayout, 0, stack.longs(descriptorSet.vkDescriptorSet), null)
 
-                VK10.vkCmdBindVertexBuffers(buff, 0, stack.longs(points.vkBuffer), stack.longs(0L))
-                VK10.vkCmdBindIndexBuffer(buff, indexes.vkBuffer, 0, VK10.VK_INDEX_TYPE_UINT32) //VK10.vkCmdDraw(buff, 3, 1, 0, 0)
-                VK10.vkCmdDrawIndexed(buff, cube.indexesCount, 1, 0, 0, 0)
-              }
+              VK10.vkCmdBindVertexBuffers(buff, 0, stack.longs(points.vkBuffer), stack.longs(0L))
+              VK10.vkCmdBindIndexBuffer(buff, indexes.vkBuffer, 0, VK10.VK_INDEX_TYPE_UINT32) //VK10.vkCmdDraw(buff, 3, 1, 0, 0)
+              VK10.vkCmdDrawIndexed(buff, cube.indexesCount, 1, 0, 0, 0)
             }
+
           } | { loop => loop.run() }
 
         }
