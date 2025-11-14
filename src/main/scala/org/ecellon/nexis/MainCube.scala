@@ -13,6 +13,7 @@ import vulkan.memory.{MemoryBuffer, TypeLength}
 import vulkan.{Buffer, CommandBuffer, DescriptorPool, DescriptorSet, DescriptorSetLayout, Fence, Pipeline, PipelineLayout, RenderCommand, Sampler, Semaphore, Texture, VulkanSystem}
 import org.ecellon.nexis.math.perspective.*
 import org.ecellon.nexis.utils.{Dimension, FpsCounter}
+import org.ecellon.nexis.vulkan.frame.{NextFrame, RenderLoop}
 
 // --sun-misc-unsafe-memory-access=allow --enable-native-access=ALL-UNNAMED -XX:+UnlockExperimentalVMOptions -XX:+TrustFinalNonStaticFields
 object MainCube extends Runnable{
@@ -140,46 +141,32 @@ object MainCube extends Runnable{
           val cameraPoint = Vector3f()
           val camera = use(OrbitCamera(sys.window, perspective(60, sys.windowSize, 1, 1000))).set(cameraPoint, 3, 0, 0)
 
-          // >>
-          while (sys.window.pullEvents()) {
-
-            camera.update(cameraPoint)
+          new RenderLoop(sys){
 
             // cpu calc
-            // fps(f => println("fps: "+f))
-
-            inFlightFence.await().reset()
-
-            // update gpu
-
-            val next = sys.swapChain.acquireNextImage(imageAvailableSemaphore) // waiting
-            for(q <- next.presentResult) println(q)
-
-            val cmdBuff = render.record(next){ (stack, buff) =>
-              triangle.bindPipeline(buff)
-
-              val viewBuff = stack.callocFloat(2 * 4 * 4)
-              camera.viewMatrix.toFloatBuffer(viewBuff)
-              camera.rotationMatrix.toFloatBuffer(viewBuff)
-              viewBuff.flip()
-
-              VK10.vkCmdPushConstants(buff, pipelineLayout.vkPipelineLayout, VK10.VK_SHADER_STAGE_VERTEX_BIT, 0, viewBuff)
-
-              VK10.vkCmdBindDescriptorSets(buff, VK10.VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout.vkPipelineLayout, 0, stack.longs(descriptorSet.vkDescriptorSet), null)
-
-              VK10.vkCmdBindVertexBuffers(buff, 0, stack.longs(points.vkBuffer), stack.longs(0L))
-              VK10.vkCmdBindIndexBuffer(buff, indexes.vkBuffer, 0, VK10.VK_INDEX_TYPE_UINT32) //VK10.vkCmdDraw(buff, 3, 1, 0, 0)
-              VK10.vkCmdDrawIndexed(buff, cube.indexesCount, 1, 0, 0, 0)
+            override protected def updateCpu(): Unit = {
+              camera.update(cameraPoint)
             }
 
-            graphicsQueue.submit(cmdBuff, imageAvailableSemaphore, VK10.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, renderFinishedSemaphore, inFlightFence)
-            //graphicsQueue.submit(cmdBuff, imageAvailableSemaphore, VK10.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, renderFinishedSemaphore, Some(inFlightFence))
-            val res = sys.swapChain.presentImage(next, renderFinishedSemaphore)
-            for(q <- res) println(q)
+            override protected def record(next:NextFrame): CommandBuffer = {
+              render.record(next) { (stack, buff) =>
+                triangle.bindPipeline(buff)
 
-          }
+                val viewBuff = stack.callocFloat(2 * 4 * 4)
+                camera.viewMatrix.toFloatBuffer(viewBuff)
+                camera.rotationMatrix.toFloatBuffer(viewBuff)
+                viewBuff.flip()
 
-          // <<
+                VK10.vkCmdPushConstants(buff, pipelineLayout.vkPipelineLayout, VK10.VK_SHADER_STAGE_VERTEX_BIT, 0, viewBuff)
+
+                VK10.vkCmdBindDescriptorSets(buff, VK10.VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout.vkPipelineLayout, 0, stack.longs(descriptorSet.vkDescriptorSet), null)
+
+                VK10.vkCmdBindVertexBuffers(buff, 0, stack.longs(points.vkBuffer), stack.longs(0L))
+                VK10.vkCmdBindIndexBuffer(buff, indexes.vkBuffer, 0, VK10.VK_INDEX_TYPE_UINT32) //VK10.vkCmdDraw(buff, 3, 1, 0, 0)
+                VK10.vkCmdDrawIndexed(buff, cube.indexesCount, 1, 0, 0, 0)
+              }
+            }
+          } | { loop => loop.run() }
 
         }
 
