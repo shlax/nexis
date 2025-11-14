@@ -46,9 +46,6 @@ object MainCube extends Runnable{
       val graphicsQueue = sys.device.graphicsQueue
 
       using { use =>
-        val imageAvailableSemaphore = use(Semaphore(sys.device))
-        val renderFinishedSemaphore = use(Semaphore(sys.device))
-        val inFlightFence = use(Fence(sys.device))
 
         // vec2(0.0, -0.5), vec2(-0.5, 0.5), vec2(0.5, 0.5)
         val points = use(Buffer(sys.device, cube.vertexesSize, VK10.VK_BUFFER_USAGE_VERTEX_BUFFER_BIT,
