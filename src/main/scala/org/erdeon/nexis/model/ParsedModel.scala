@@ -66,7 +66,25 @@ class ParsedModel(val points:Array[Vector3f], val faces:Array[ParsedTriangle]){
       ind += 1
     }
 
-    CompiledModel(IndexedModel(vertexArray, indexes), indMap)
+    compiledModel(indexedModel(vertexArray, indexes), indMap)
+  }
+
+  protected var compiledModel: (model:IndexedModel, indexes:Array[Array[Int]]) => CompiledModel = { (m, i) =>
+    CompiledModel(m, i)
+  }
+
+  def compiledModel(fn:  (model:IndexedModel, indexes:Array[Array[Int]]) => CompiledModel ):this.type = {
+    compiledModel = fn
+    this
+  }
+
+  protected var indexedModel: (vertexes: Array[Vertex], indexes:Array[IndexedTriangle]) => IndexedModel = { (v, i) =>
+    IndexedModel(v, i)
+  }
+
+  def indexedModel(fn: (vertexes: Array[Vertex], indexes:Array[IndexedTriangle]) => IndexedModel ):this.type = {
+    indexedModel = fn
+    this
   }
 
 }

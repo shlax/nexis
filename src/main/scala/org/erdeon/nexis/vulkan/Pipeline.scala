@@ -5,7 +5,7 @@ import org.lwjgl.system.MemoryStack
 import org.lwjgl.vulkan.{VK10, VkCommandBuffer, VkGraphicsPipelineCreateInfo, VkPipelineColorBlendAttachmentState, VkPipelineColorBlendStateCreateInfo, VkPipelineDepthStencilStateCreateInfo, VkPipelineDynamicStateCreateInfo, VkPipelineInputAssemblyStateCreateInfo, VkPipelineMultisampleStateCreateInfo, VkPipelineRasterizationStateCreateInfo, VkPipelineShaderStageCreateInfo, VkPipelineVertexInputStateCreateInfo, VkPipelineViewportStateCreateInfo, VkRect2D, VkViewport}
 import org.erdeon.nexis.utils.closeable.*
 
-class Pipeline(val pipelineLayout: PipelineLayout, val renderPass: RenderPass,
+abstract class Pipeline(val pipelineLayout: PipelineLayout, val renderPass: RenderPass,
                compiledShaders:IndexedSeq[CompiledShader],
                topology:Int = VK10.VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST,
                polygonMode:Int = VK10.VK_POLYGON_MODE_FILL,
@@ -19,7 +19,7 @@ class Pipeline(val pipelineLayout: PipelineLayout, val renderPass: RenderPass,
   }
 
   /** customize VkPipelineVertexInputStateCreateInfo */
-  protected def vertexInput(stack:MemoryStack, info:VkPipelineVertexInputStateCreateInfo):Unit = { }
+  protected def vertexInput(stack:MemoryStack, info:VkPipelineVertexInputStateCreateInfo):Unit
 
   protected def initPipeline(compiledShaders:IndexedSeq[CompiledShader],
        topology:Int, polygonMode:Int, cullMode:Int, frontFace:Int, colorAttachmentsCount:Int): Long = MemoryStack.stackPush() | { stack =>

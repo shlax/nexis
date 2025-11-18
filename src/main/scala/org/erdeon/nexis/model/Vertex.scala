@@ -17,5 +17,7 @@ class Vertex(val point:Vector3f, val normal:Vector3f, val uvs:Array[Vector2f]) e
   def size:Int = {
     TypeLength.floatLength(3 + 3) + TypeLength.floatLength(2 * uvs.length)
   }
-
+  
+  def uvsCount:Int = uvs.length
+  
 }

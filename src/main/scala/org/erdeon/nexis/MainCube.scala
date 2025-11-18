@@ -81,33 +81,8 @@ object MainCube extends Runnable{
         })
 
         val triangle = use(new Pipeline(pipelineLayout, sys.renderPass, shaders){
-
-          // layout(location = 0) in vec2 inPosition
           override protected def vertexInput(stack: MemoryStack, info:VkPipelineVertexInputStateCreateInfo):Unit = {
-            val bindings = VkVertexInputBindingDescription.calloc(1, stack)
-            bindings.get(0)
-              .binding(0)
-              .stride(cube.vertexesStride)
-              .inputRate(VK10.VK_VERTEX_INPUT_RATE_VERTEX)
-            info.pVertexBindingDescriptions(bindings)
-
-            val attributes = VkVertexInputAttributeDescription.calloc(3, stack)
-            attributes.get(0) // vertex
-              .binding(0)
-              .location(0)
-              .format(VK10.VK_FORMAT_R32G32B32_SFLOAT)
-              .offset(0)
-            attributes.get(1) // normal
-              .binding(0)
-              .location(1)
-              .format(VK10.VK_FORMAT_R32G32B32_SFLOAT)
-              .offset(TypeLength.floatLength(3))
-            attributes.get(2) // uv
-              .binding(0)
-              .location(2)
-              .format(VK10.VK_FORMAT_R32G32_SFLOAT)
-              .offset(TypeLength.floatLength(3+3))
-            info.pVertexAttributeDescriptions(attributes)
+            cube.vertexInput(stack, info)
           }
         })
 
