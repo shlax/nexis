@@ -42,7 +42,7 @@ object MainCube extends Runnable{
       ModelLoader().loadModel(in)
     }).invert(Axis.Y).compile().vulkanModel
 
-    VulkanSystem("NXN", Dimension(1280, 720)) | { sys => // , "NVIDIA GeForce RTX 2050"
+    VulkanSystem("Cube", Dimension(1280, 720)) | { sys => // , "NVIDIA GeForce RTX 2050"
       val graphicsQueue = sys.device.graphicsQueue
 
       using { use =>
@@ -64,7 +64,6 @@ object MainCube extends Runnable{
 
         val descriptorPool = use(DescriptorPool(sys.device, Map(VK10.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER -> 1)))
         val layout = use(DescriptorSetLayout(sys.device, 0, VK10.VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK10.VK_SHADER_STAGE_FRAGMENT_BIT))
-
         val descriptorSet = use(DescriptorSet(descriptorPool, IndexedSeq(layout)))
 
         // layout(push_constant) uniform Transformations { mat4 viewMatrix; } transformations;
@@ -74,8 +73,8 @@ object MainCube extends Runnable{
               .stageFlags(VK10.VK_SHADER_STAGE_VERTEX_BIT)
               .offset(0)
               .size(TypeLength.floatLength(2 * 4 * 4))
+            
             info.pPushConstantRanges(ranges)
-
             info.pSetLayouts(stack.longs(layout.vkDescriptorLayout))
           }
         })
