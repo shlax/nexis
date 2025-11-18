@@ -82,7 +82,7 @@ object MainCube extends Runnable{
 
         val triangle = use(new Pipeline(pipelineLayout, sys.renderPass, shaders){
           override protected def vertexInput(stack: MemoryStack, info:VkPipelineVertexInputStateCreateInfo):Unit = {
-            cube.vertexInput(stack, info)
+            cube.pipeline(stack, info)
           }
         })
 

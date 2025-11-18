@@ -27,7 +27,7 @@ class IndexedModel(vertexes: Array[Vertex], val indexes:Array[IndexedTriangle]) 
 
   def uvsCount: Int = vertexes.head.uvsCount
 
-  def vertexInput(stack: MemoryStack, info: VkPipelineVertexInputStateCreateInfo): Unit = {
+  def pipeline(stack: MemoryStack, info: VkPipelineVertexInputStateCreateInfo): Unit = {
     val bindings = VkVertexInputBindingDescription.calloc(1, stack)
     bindings.get(0)
       .binding(0)
