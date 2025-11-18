@@ -53,7 +53,7 @@ class IndexedModel(vertexes: Array[Vertex], val indexes:Array[IndexedTriangle]) 
         .binding(0)
         .location(2 + i)
         .format(VK10.VK_FORMAT_R32G32_SFLOAT)
-        .offset(TypeLength.floatLength(3 + 3))
+        .offset(TypeLength.floatLength(3 + 3 + (i * 2)))
       info.pVertexAttributeDescriptions(attributes)
     }
   }
