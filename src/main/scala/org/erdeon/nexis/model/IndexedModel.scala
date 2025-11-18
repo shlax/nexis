@@ -36,6 +36,7 @@ class IndexedModel(verts: Array[Vertex], val indexes:Array[IndexedTriangle]) ext
     info.pVertexBindingDescriptions(bindings)
 
     val attributes = VkVertexInputAttributeDescription.calloc(2 + uvsCount, stack)
+
     attributes.get(0) // vertex : layout(location = 0) in vec2 inPosition
       .binding(0)
       .location(0)
