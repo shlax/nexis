@@ -6,7 +6,7 @@ import org.lwjgl.vulkan.{VK10, VkPipelineVertexInputStateCreateInfo, VkVertexInp
 
 import java.nio.IntBuffer
 
-class IndexedModel(vertexes: Array[Vertex], val indexes:Array[IndexedTriangle]) extends VertexModel(vertexes), ToIntBuffer {
+class IndexedModel(verts: Array[Vertex], val indexes:Array[IndexedTriangle]) extends VertexModel(verts), ToIntBuffer {
 
   override def toIntBuffer(b: IntBuffer): IntBuffer = {
     for (i <- indexes) i.toIntBuffer(b)
