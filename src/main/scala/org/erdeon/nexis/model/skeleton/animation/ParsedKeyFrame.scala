@@ -15,7 +15,7 @@ class ParsedKeyFrame(jointsAngles: Array[ParsedJointAngles]) {
         for(a <- r.angles){
           var v: Float = Float.NaN
           for(pa <- ang; x <- pa(a.axis)){
-            v = x.value
+            v = x.angle()
           }
           angles += v
         }

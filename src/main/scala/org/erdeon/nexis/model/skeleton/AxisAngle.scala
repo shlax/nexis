@@ -6,6 +6,10 @@ class AxisAngle(val axis:Axis){
 
   var angle:Float = 0f
 
+  def update(a:Float): Unit = {
+    angle = a
+  }
+
   def rotation(): Matrix4f = {
     axis.rotate(angle)
   }

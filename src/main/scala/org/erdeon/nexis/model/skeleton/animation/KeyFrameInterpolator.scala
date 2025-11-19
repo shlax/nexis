@@ -17,10 +17,15 @@ class KeyFrameInterpolator(j:AbstractJoint) {
     i.toArray
   }
 
-  def update(to:KeyFrame, next:KeyFrame): Unit = {
-    for(i <- interpolators.indices){
-      interpolators(i).update(to(i), next(i))
-    }
+  /** time from 0 to 1 */
+  def apply(t:Float):this.type = {
+    for(i <- interpolators) i.apply(t)
+    this
+  }
+
+  def update(to:KeyFrame, next:KeyFrame): this.type = {
+    for(i <- interpolators.indices) interpolators(i).update(to(i), next(i))
+    this
   }
 
 }

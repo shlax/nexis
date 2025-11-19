@@ -2,10 +2,10 @@ package org.erdeon.nexis
 
 import de.matthiasmann.twl.utils.PNGDecoder
 import org.erdeon.nexis.controls.OrbitCamera
-import org.erdeon.nexis.math.{Axis, Vector3f}
+import org.erdeon.nexis.math.{Axis, Matrix4f, Vector3f}
 import org.erdeon.nexis.model.ModelLoader
 import org.erdeon.nexis.model.skeleton.SkeletonLoader
-import org.erdeon.nexis.model.skeleton.animation.KeyFrameLoader
+import org.erdeon.nexis.model.skeleton.animation.{KeyFrameInterpolator, KeyFrameLoader}
 import org.erdeon.nexis.utils.Dimension
 import org.erdeon.nexis.vulkan.{Buffer, CommandBuffer, DescriptorPool, DescriptorSet, DescriptorSetLayout, Fence, Pipeline, PipelineLayout, RenderCommand, Sampler, Texture, VulkanSystem}
 import org.erdeon.nexis.vulkan.shader.ShaderCompiler
@@ -46,11 +46,16 @@ object MainBox extends Runnable{
       SkeletonLoader().loadSkeleton(in)
     }
 
-    val model = boxSkeleton(Map("pCube1" -> boxMesh))
+    val root = boxSkeleton(Map("pCube1" -> boxMesh))
 
     val animations = for(s <- Seq("00", "30")) yield getClass.getResourceAsStream("/models/box/animation/"+s+".ang") | { in =>
-      KeyFrameLoader().loadKeyFrame(in).apply(model)
+      KeyFrameLoader().loadKeyFrame(in).apply(root)
     }
+
+    val interpolator = KeyFrameInterpolator(root)
+    interpolator.update(animations(1), animations(1)).apply(1f)
+
+    root.apply(Matrix4f(), Matrix4f())
 
     val box = boxMesh.vulkanModel
 
@@ -120,7 +125,7 @@ object MainBox extends Runnable{
           }
 
           val cameraPoint = Vector3f()
-          val camera = use(OrbitCamera(sys.window, perspective(60, sys.windowSize, 1, 1000))).set(cameraPoint, 3, 0, 0)
+          val camera = use(OrbitCamera(sys.window, perspective(60, sys.windowSize, 1, 1000))).set(cameraPoint, 5, 0, 0)
 
           new RenderLoop(sys) {
 

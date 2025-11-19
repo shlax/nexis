@@ -1,3 +1,4 @@
 [
-    joint2 : [ X:30]
+    joint1 : [ Z:-15],
+    joint2 : [ Z:30]
 ]
