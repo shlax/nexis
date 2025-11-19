@@ -53,7 +53,7 @@ object MainBox extends Runnable{
     }
 
     val interpolator = KeyFrameInterpolator(root)
-    interpolator.update(animations(1), animations(1)).apply(1f)
+    interpolator.update(animations(1)).apply(1f)
 
     root.apply(Matrix4f(), Matrix4f())
 

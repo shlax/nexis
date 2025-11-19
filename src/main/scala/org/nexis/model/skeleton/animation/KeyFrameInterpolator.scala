@@ -23,6 +23,10 @@ class KeyFrameInterpolator(j:AbstractJoint) {
     this
   }
 
+  def update(to:KeyFrame): this.type = {
+    update(to, to)
+  }
+
   def update(to:KeyFrame, next:KeyFrame): this.type = {
     for(i <- interpolators.indices) interpolators(i).update(to(i), next(i))
     this
