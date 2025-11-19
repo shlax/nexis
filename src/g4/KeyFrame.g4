@@ -4,25 +4,25 @@ grammar KeyFrame;
     joint1 : [ X: 30, Y:45 ],
     joint2 : [ X: 30, Z:45 ]
 ] */
-keyFrame returns [ org.nxn.model.skeleton.animation.ParsedKeyFrame result ]:
-    { java.util.ArrayList<org.nxn.model.skeleton.animation.ParsedJointAngles> l = new java.util.ArrayList<org.nxn.model.skeleton.animation.ParsedJointAngles>(); }
-    '[' j=joint { l.add($j.r); } (',' k=joint { l.add($k.r); } )*  ']'
-    { $result = new org.nxn.model.skeleton.animation.ParsedKeyFrame( l.toArray( new org.nxn.model.skeleton.animation.ParsedJointAngles[0]) ); }
+keyFrame returns [ org.nexis.model.skeleton.animation.ParsedKeyFrame result ]:
+    { java.util.ArrayList<org.nexis.model.skeleton.animation.ParsedJointAngles> l = new java.util.ArrayList<org.nexis.model.skeleton.animation.ParsedJointAngles>(); }
+    '[' j=joint { l.add($j.r); } ( k=joint { l.add($k.r); } )*  ']'
+    { $result = new org.nexis.model.skeleton.animation.ParsedKeyFrame( l.toArray( new org.nexis.model.skeleton.animation.ParsedJointAngles[0]) ); }
 ;
 
-joint returns [ org.nxn.model.skeleton.animation.ParsedJointAngles r ]:
+joint returns [ org.nexis.model.skeleton.animation.ParsedJointAngles r ]:
     n=NAME ':' a=angles
-    { $r = new org.nxn.model.skeleton.animation.ParsedJointAngles( $n.text, $a.r ); }
+    { $r = new org.nexis.model.skeleton.animation.ParsedJointAngles( $n.text, $a.r ); }
 ;
 
-angles returns [ org.nxn.model.skeleton.animation.ParsedJointAngle[] r ]:
-    { java.util.ArrayList<org.nxn.model.skeleton.animation.ParsedJointAngle> l = new java.util.ArrayList<org.nxn.model.skeleton.animation.ParsedJointAngle>(); }
+angles returns [ org.nexis.model.skeleton.animation.ParsedJointAngle[] r ]:
+    { java.util.ArrayList<org.nexis.model.skeleton.animation.ParsedJointAngle> l = new java.util.ArrayList<org.nexis.model.skeleton.animation.ParsedJointAngle>(); }
     '[' i=angle { l.add($i.r); } (',' j=angle { l.add($j.r); } )* ']'
-    { $r = l.toArray(new org.nxn.model.skeleton.animation.ParsedJointAngle[0]); }
+    { $r = l.toArray(new org.nexis.model.skeleton.animation.ParsedJointAngle[0]); }
 ;
 
-angle returns [ org.nxn.model.skeleton.animation.ParsedJointAngle r ]:
-    a=NAME ':' v=floatNum { $r = new org.nxn.model.skeleton.animation.ParsedJointAngle(org.nxn.math.Axis.valueOf($a.text), $v.r); }
+angle returns [ org.nexis.model.skeleton.animation.ParsedJointAngle r ]:
+    a=NAME ':' v=floatNum { $r = new org.nexis.model.skeleton.animation.ParsedJointAngle(org.nexis.math.Axis.valueOf($a.text), $v.r); }
 ;
 
 floatNum returns [ float r ]:
