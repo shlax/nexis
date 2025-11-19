@@ -6,7 +6,7 @@
 		pCube1:[6]
 		pCube1:[12,13,14,15]
 	]:[
-		joint2:(1,0,0):XYZ:[
+		joint2:(0,0,0):XYZ:[
 			pCube1:[1]
 			pCube1:[3]
 			pCube1:[5]
