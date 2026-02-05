@@ -5,8 +5,9 @@ import org.lwjgl.glfw.GLFWVulkan
 import org.lwjgl.system.{MemoryStack, MemoryUtil}
 import org.lwjgl.vulkan.{EXTDebugUtils, VK, VK10, VkApplicationInfo, VkDebugUtilsMessengerCallbackDataEXT, VkDebugUtilsMessengerCallbackEXT, VkDebugUtilsMessengerCallbackEXTI, VkDebugUtilsMessengerCreateInfoEXT, VkExtensionProperties, VkInstance, VkInstanceCreateInfo, VkLayerProperties}
 import org.nexis.utils.closeable.*
+import org.nexis.vulkan.interopt.InstanceDebug
 
-class Instance(val system: VulkanSystem) extends VkDebugUtilsMessengerCallbackEXTI, AutoCloseable{
+class Instance(val system: VulkanSystem) extends AutoCloseable{
 
   private var dbgFn:Option[VkDebugUtilsMessengerCallbackEXT] = None
   private var dbgCallBack:Option[Long] = None
@@ -43,7 +44,7 @@ class Instance(val system: VulkanSystem) extends VkDebugUtilsMessengerCallbackEX
 
     val glfwExt = GLFWVulkan.glfwGetRequiredInstanceExtensions()
     if(glfwExt == null){
-      throw IllegalStateException("glfwGetRequiredInstanceExtensions failed to find the platform surface extensions.");
+      throw IllegalStateException("glfwGetRequiredInstanceExtensions failed to find the platform surface extensions.")
     }
 
     var requiredExtension:Option[PointerBuffer] = None
@@ -105,7 +106,7 @@ class Instance(val system: VulkanSystem) extends VkDebugUtilsMessengerCallbackEX
 
     var dbgInfo:Option[VkDebugUtilsMessengerCreateInfoEXT] = None
     if(system.debug != LogLevel.none){
-      val f = VkDebugUtilsMessengerCallbackEXT.create(this)
+      val f = VkDebugUtilsMessengerCallbackEXT.create(new InstanceDebug(this))
       dbgFn = Some(f)
 
       val dbgInf = VkDebugUtilsMessengerCreateInfoEXT.calloc(stack)
@@ -142,7 +143,7 @@ class Instance(val system: VulkanSystem) extends VkDebugUtilsMessengerCallbackEX
 
   val vkInstance:VkInstance =  initInstance()
 
-  override def invoke(messageSeverity: Int, messageTypes: Int, pCallbackData: Long, pUserData: Long): Int = {
+  def invoke(messageSeverity: Int, messageTypes: Int, pCallbackData: Long, pUserData: Long): Int = {
 
     val severity = if((messageSeverity & EXTDebugUtils.VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) != 0) "VERBOSE"
       else if((messageSeverity & EXTDebugUtils.VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT) != 0) "INFO"

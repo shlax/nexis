@@ -1,10 +1,10 @@
 package org.nexis.controls
 
-import org.lwjgl.glfw.{GLFW, GLFWCursorPosCallbackI, GLFWMouseButtonCallbackI, GLFWScrollCallbackI}
+import org.lwjgl.glfw.{GLFW, GLFWMouseButtonCallbackI}
 import org.lwjgl.system.MemoryUtil
 import org.nexis.math.Vector3f
-import org.nexis.utils.closeable.*
 import org.nexis.vulkan.GlfwWindow
+import org.nexis.vulkan.interopt.{MouseButtonCallback, MousePositionCallback, MouseScrollCallback}
 
 class MouseInput(val window: GlfwWindow) extends AutoCloseable{
   val cursor: Long = GLFW.glfwCreateStandardCursor(GLFW.GLFW_CROSSHAIR_CURSOR)
@@ -36,20 +36,20 @@ class MouseInput(val window: GlfwWindow) extends AutoCloseable{
   private var rotate = false
   private var setXY = false
 
-  closeCallback(GLFW.glfwSetCursorPosCallback(window.glfwWindowHandle, (win: Long, xpos: Double, ypos: Double) => {
+  closeCallback(GLFW.glfwSetCursorPosCallback(window.glfwWindowHandle, new MousePositionCallback( (win:Long, xPos: Double, yPos: Double) => {
     if (rotate) {
       if (setXY) {
-        xOff += xpos - xWin
-        yOff += ypos - yWin
+        xOff += xPos - xWin
+        yOff += yPos - yWin
       }else{
         setXY = true
       }
-      xWin = xpos
-      yWin = ypos
+      xWin = xPos
+      yWin = yPos
     }
-  }))
+  })))
 
-  closeCallback(GLFW.glfwSetMouseButtonCallback(window.glfwWindowHandle, (win: Long, button: Int, action: Int, mods: Int) => {
+  closeCallback(GLFW.glfwSetMouseButtonCallback(window.glfwWindowHandle, new MouseButtonCallback( (win: Long, button: Int, action: Int, mods: Int) => {
     if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
       if (action == GLFW.GLFW_PRESS) {
         GLFW.glfwSetInputMode(win, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED)
@@ -59,11 +59,11 @@ class MouseInput(val window: GlfwWindow) extends AutoCloseable{
         GLFW.glfwSetInputMode(win, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL)
       }
     }
-  }))
+  })))
 
-  closeCallback(GLFW.glfwSetScrollCallback(window.glfwWindowHandle, (window: Long, xOffset: Double, yOffset: Double) => {
+  closeCallback(GLFW.glfwSetScrollCallback(window.glfwWindowHandle, new MouseScrollCallback( (win: Long, xOffset:Double, yOffset: Double) => {
     zOff += yOffset
-  }))
+  })))
 
   override def close(): Unit = {
     closeCallback(GLFW.glfwSetCursorPosCallback(window.glfwWindowHandle, null))
