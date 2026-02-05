@@ -143,6 +143,7 @@ class Instance(val system: VulkanSystem) extends AutoCloseable{
 
   val vkInstance:VkInstance =  initInstance()
 
+  // org.nexis.vulkan.interopt.InstanceDebug#invoke(int, int, long, long)
   def invoke(messageSeverity: Int, messageTypes: Int, pCallbackData: Long, pUserData: Long): Int = {
 
     val severity = if((messageSeverity & EXTDebugUtils.VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) != 0) "VERBOSE"
