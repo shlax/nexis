@@ -3,7 +3,7 @@ package org.nexis.vulkan
 import org.lwjgl.PointerBuffer
 import org.lwjgl.glfw.GLFWVulkan
 import org.lwjgl.system.{MemoryStack, MemoryUtil}
-import org.lwjgl.vulkan.{EXTDebugUtils, VK, VK10, VkApplicationInfo, VkDebugUtilsMessengerCallbackDataEXT, VkDebugUtilsMessengerCallbackEXT, VkDebugUtilsMessengerCallbackEXTI, VkDebugUtilsMessengerCreateInfoEXT, VkExtensionProperties, VkInstance, VkInstanceCreateInfo, VkLayerProperties}
+import org.lwjgl.vulkan.{EXTDebugUtils, VK, VK10, VkApplicationInfo, VkDebugUtilsMessengerCallbackDataEXT, VkDebugUtilsMessengerCallbackEXT, VkDebugUtilsMessengerCreateInfoEXT, VkExtensionProperties, VkInstance, VkInstanceCreateInfo, VkLayerProperties}
 import org.nexis.utils.closeable.*
 import org.nexis.vulkan.interopt.InstanceDebug
 
