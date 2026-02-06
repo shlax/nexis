@@ -4,7 +4,7 @@ import org.lwjgl.glfw.{GLFW, GLFWMouseButtonCallbackI}
 import org.lwjgl.system.MemoryUtil
 import org.nexis.math.Vector3f
 import org.nexis.vulkan.GlfwWindow
-import org.nexis.vulkan.interopt.{MouseButtonCallback, MousePositionCallback, MouseScrollCallback}
+import org.nexis.vulkan.interoperability.{MouseButtonCallback, MousePositionCallback, MouseScrollCallback}
 
 class MouseInput(val window: GlfwWindow) extends AutoCloseable{
   val cursor: Long = GLFW.glfwCreateStandardCursor(GLFW.GLFW_CROSSHAIR_CURSOR)

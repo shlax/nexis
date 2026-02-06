@@ -1,4 +1,4 @@
-package org.nexis.vulkan.interopt;
+package org.nexis.vulkan.interoperability;
 
 import org.lwjgl.vulkan.VkDebugUtilsMessengerCallbackEXTI;
 import org.nexis.vulkan.Instance;

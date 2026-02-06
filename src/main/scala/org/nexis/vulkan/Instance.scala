@@ -5,7 +5,7 @@ import org.lwjgl.glfw.GLFWVulkan
 import org.lwjgl.system.{MemoryStack, MemoryUtil}
 import org.lwjgl.vulkan.{EXTDebugUtils, VK, VK10, VkApplicationInfo, VkDebugUtilsMessengerCallbackDataEXT, VkDebugUtilsMessengerCallbackEXT, VkDebugUtilsMessengerCreateInfoEXT, VkExtensionProperties, VkInstance, VkInstanceCreateInfo, VkLayerProperties}
 import org.nexis.utils.closeable.*
-import org.nexis.vulkan.interopt.InstanceDebug
+import org.nexis.vulkan.interoperability.InstanceDebug
 
 class Instance(val system: VulkanSystem) extends AutoCloseable{
 

@@ -1,4 +1,4 @@
-package org.nexis.vulkan.interopt;
+package org.nexis.vulkan.interoperability;
 
 @FunctionalInterface
 public interface PositionCallback {
