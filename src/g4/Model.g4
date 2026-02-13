@@ -12,37 +12,37 @@ grammar Model;
     ]
 ] */
 
-model returns [ org.nexis.model.ParsedModel result ] :
+model returns [ org.vortex.model.ParsedModel result ] :
     p=points ':' t=triangles
-    { $result = new org.nexis.model.ParsedModel( $p.r.toArray(new org.nexis.math.Vector3f[0] ), $t.r.toArray( new org.nexis.model.ParsedTriangle[0] ) ); };
+    { $result = new org.vortex.model.ParsedModel( $p.r.toArray(new org.vortex.math.Vector3f[0] ), $t.r.toArray( new org.vortex.model.ParsedTriangle[0] ) ); };
 
-triangles returns [ java.util.List<org.nexis.model.ParsedTriangle> r ] :
-    { $r = new java.util.ArrayList<org.nexis.model.ParsedTriangle>(); }
+triangles returns [ java.util.List<org.vortex.model.ParsedTriangle> r ] :
+    { $r = new java.util.ArrayList<org.vortex.model.ParsedTriangle>(); }
     '[' f=triangle { $r.add($f.r); } ( fi=triangle { $r.add($fi.r); } )* ']' ;
 
-triangle returns [ org.nexis.model.ParsedTriangle r ] :
+triangle returns [ org.vortex.model.ParsedTriangle r ] :
     '[' a=vertex b=vertex c=vertex ']'
-    { $r = new org.nexis.model.ParsedTriangle($a.r, $b.r, $c.r); } ;
+    { $r = new org.vortex.model.ParsedTriangle($a.r, $b.r, $c.r); } ;
 
-vertex returns [ org.nexis.model.ParsedVertex r ] :
+vertex returns [ org.vortex.model.ParsedVertex r ] :
     i=intNum ':' n=vector3 ':' u=uvs
-    { $r = new org.nexis.model.ParsedVertex($i.r, $n.r, $u.r.toArray( new org.nexis.math.Vector2f[0] ) ); } ;
+    { $r = new org.vortex.model.ParsedVertex($i.r, $n.r, $u.r.toArray( new org.vortex.math.Vector2f[0] ) ); } ;
 
-uvs returns [ java.util.List<org.nexis.math.Vector2f> r ] :
+uvs returns [ java.util.List<org.vortex.math.Vector2f> r ] :
     { $r = new java.util.ArrayList<>(); }
     '[' p=vector2 { $r.add($p.r); } (',' pi=vector2 { $r.add($pi.r); } )* ']' ;
 
-points returns [ java.util.List<org.nexis.math.Vector3f> r ] :
+points returns [ java.util.List<org.vortex.math.Vector3f> r ] :
     { $r = new java.util.ArrayList<>(); }
     '[' p=vector3 { $r.add($p.r); } ( pi=vector3 { $r.add($pi.r); } )* ']' ;
 
-vector3  returns [ org.nexis.math.Vector3f r ]:
+vector3  returns [ org.vortex.math.Vector3f r ]:
     '(' a=floatNum ',' b=floatNum ',' c=floatNum ')'
-    { $r = new org.nexis.math.Vector3f($a.r, $b.r, $c.r); } ;
+    { $r = new org.vortex.math.Vector3f($a.r, $b.r, $c.r); } ;
 
-vector2  returns [ org.nexis.math.Vector2f r ]:
+vector2  returns [ org.vortex.math.Vector2f r ]:
     '(' a=floatNum ',' b=floatNum ')'
-    { $r = new org.nexis.math.Vector2f($a.r, $b.r); } ;
+    { $r = new org.vortex.math.Vector2f($a.r, $b.r); } ;
 
 floatNum returns [ float r ]:
     s=('+'|'-')? n=DIGITS ('.' m=DIGITS)? (('e'|'E') e=('+'|'-')? p=DIGITS )? {

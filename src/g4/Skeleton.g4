@@ -14,52 +14,52 @@ grammar Skeleton;
     ]
 ] */
 
-skeleton returns [ org.nexis.model.skeleton.ParsedJoint result ]:
+skeleton returns [ org.vortex.model.skeleton.ParsedJoint result ]:
     '[' j=joint ']' { $result = $j.r; } ;
 
-joint returns [ org.nexis.model.skeleton.ParsedJoint r ]:
-    { org.nexis.math.Vector3f av = null;
-      org.nexis.math.Axis[] ao = null;
-      org.nexis.model.skeleton.ParsedAngle[] aa = null;
-      org.nexis.model.skeleton.ParsedBinding[] ab = null;
-      org.nexis.model.skeleton.ParsedJoint[] al = null; }
+joint returns [ org.vortex.model.skeleton.ParsedJoint r ]:
+    { org.vortex.math.Vector3f av = null;
+      org.vortex.math.Axis[] ao = null;
+      org.vortex.model.skeleton.ParsedAngle[] aa = null;
+      org.vortex.model.skeleton.ParsedBinding[] ab = null;
+      org.vortex.model.skeleton.ParsedJoint[] al = null; }
     nm=NAME ':' ( (v=vector3 o=axis { av = $v.r; ao = $o.r; } ) | a=angles { aa = $a.r; } ) (':' b=bindings { ab = $b.r; } )? ( ':' l=jointList { al = $l.r; } )?
-    { $r = new org.nexis.model.skeleton.ParsedJoint( $nm.text, av, ao, aa, ab, al); };
+    { $r = new org.vortex.model.skeleton.ParsedJoint( $nm.text, av, ao, aa, ab, al); };
 
-axis returns [ org.nexis.math.Axis[] r ]:
+axis returns [ org.vortex.math.Axis[] r ]:
     ':' t=NAME
-    { $r = $t.text.chars().mapToObj(c -> org.nexis.math.Axis.valueOf(String.valueOf((char)c))).toArray(l -> new org.nexis.math.Axis[l]); };
+    { $r = $t.text.chars().mapToObj(c -> org.vortex.math.Axis.valueOf(String.valueOf((char)c))).toArray(l -> new org.vortex.math.Axis[l]); };
 
-angles returns [ org.nexis.model.skeleton.ParsedAngle[] r ]:
-    { java.util.List<org.nexis.model.skeleton.ParsedAngle> l = new java.util.ArrayList<org.nexis.model.skeleton.ParsedAngle>(); }
+angles returns [ org.vortex.model.skeleton.ParsedAngle[] r ]:
+    { java.util.List<org.vortex.model.skeleton.ParsedAngle> l = new java.util.ArrayList<org.vortex.model.skeleton.ParsedAngle>(); }
     '(' j=angle { l.add($j.r); } (',' k=angle { l.add($k.r); } )* ')'
-    { $r = l.toArray(new org.nexis.model.skeleton.ParsedAngle[0]); };
+    { $r = l.toArray(new org.vortex.model.skeleton.ParsedAngle[0]); };
 
-angle returns [ org.nexis.model.skeleton.ParsedAngle r ]:
+angle returns [ org.vortex.model.skeleton.ParsedAngle r ]:
     n=floatNum ':' f=NAME '->' t=NAME
-    { $r = new org.nexis.model.skeleton.ParsedAngle(org.nexis.math.Axis.valueOf($f.text), org.nexis.math.Axis.valueOf($t.text), $n.r); };
+    { $r = new org.vortex.model.skeleton.ParsedAngle(org.vortex.math.Axis.valueOf($f.text), org.vortex.math.Axis.valueOf($t.text), $n.r); };
 
-jointList returns [ org.nexis.model.skeleton.ParsedJoint[] r ]:
-    { java.util.List<org.nexis.model.skeleton.ParsedJoint> l = new java.util.ArrayList<org.nexis.model.skeleton.ParsedJoint>(); }
+jointList returns [ org.vortex.model.skeleton.ParsedJoint[] r ]:
+    { java.util.List<org.vortex.model.skeleton.ParsedJoint> l = new java.util.ArrayList<org.vortex.model.skeleton.ParsedJoint>(); }
     '[' j=joint { l.add($j.r); } ( k=joint { l.add($k.r); } )* ']'
-    { $r = l.toArray(new org.nexis.model.skeleton.ParsedJoint[0]); } ;
+    { $r = l.toArray(new org.vortex.model.skeleton.ParsedJoint[0]); } ;
 
-bindings returns [ org.nexis.model.skeleton.ParsedBinding[] r ]:
-    { java.util.List<org.nexis.model.skeleton.ParsedBinding> l = new java.util.ArrayList<org.nexis.model.skeleton.ParsedBinding>(); }
+bindings returns [ org.vortex.model.skeleton.ParsedBinding[] r ]:
+    { java.util.List<org.vortex.model.skeleton.ParsedBinding> l = new java.util.ArrayList<org.vortex.model.skeleton.ParsedBinding>(); }
     '[' n=binding { l.add($n.r); } (  m=binding { l.add($m.r); } )* ']'
-    { $r = l.toArray( new org.nexis.model.skeleton.ParsedBinding[0] ); } ;
+    { $r = l.toArray( new org.vortex.model.skeleton.ParsedBinding[0] ); } ;
 
-binding returns [ org.nexis.model.skeleton.ParsedBinding r ]:
-    n=NAME ':' i=indList { $r = new org.nexis.model.skeleton.ParsedBinding($n.text, $i.r); } ;
+binding returns [ org.vortex.model.skeleton.ParsedBinding r ]:
+    n=NAME ':' i=indList { $r = new org.vortex.model.skeleton.ParsedBinding($n.text, $i.r); } ;
 
 indList returns [ int[] r ]:
     { java.util.ArrayList<Integer> l = new java.util.ArrayList<Integer>(); }
     '[' n=intNum { l.add($n.r); } ( ',' m=intNum { l.add($m.r); } )* ']'
     { $r = l.stream().mapToInt(Integer::intValue).toArray(); };
 
-vector3  returns [ org.nexis.math.Vector3f r ]:
+vector3  returns [ org.vortex.math.Vector3f r ]:
     '(' a=floatNum ',' b=floatNum ',' c=floatNum ')'
-    { $r = new org.nexis.math.Vector3f($a.r, $b.r, $c.r); };
+    { $r = new org.vortex.math.Vector3f($a.r, $b.r, $c.r); };
 
 floatNum returns [ float r ]:
     s=('+'|'-')? n=DIGITS ('.' m=DIGITS)? (('e'|'E') e=('+'|'-')? p=DIGITS )? {
