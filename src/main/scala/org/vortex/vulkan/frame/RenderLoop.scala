@@ -9,12 +9,12 @@ abstract class RenderLoop(val system: VulkanSystem) extends AutoCloseable, Runna
 
   protected val imageAvailableSemaphore: Semaphore = initImageAvailableSemaphore()
 
-  protected def initRenderFinishedSemaphore():Array[Semaphore] = {
-    val s = for (_ <- 0 until system.swapChain.imagesCount) yield Semaphore(system.device)
+  protected def initRenderFinishedSemaphore(count:Int):Array[Semaphore] = {
+    val s = for (_ <- 0 until count) yield Semaphore(system.device)
     s.toArray
   }
 
-  protected val renderFinishedSemaphore: Array[Semaphore] = initRenderFinishedSemaphore()
+  protected val renderFinishedSemaphore: Array[Semaphore] = initRenderFinishedSemaphore(system.swapChain.imagesCount)
 
   protected def initInFlightFence():Fence = Fence(system.device)
 
