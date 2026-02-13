@@ -138,6 +138,8 @@ class SwapChain(val surface: Surface, device: Device, imageCount:Int = 0) extend
     vkImages: IndexedSeq[Long], format:Int,
     dimension: Dimension) = initSwapChain(imageCount)
 
+  def imagesCount: Int = vkImages.length
+
   protected def initImageViews(): IndexedSeq[ImageView] = {
     for(i <- vkImages.zipWithIndex) yield ImageView(device, i._1, format)
   }

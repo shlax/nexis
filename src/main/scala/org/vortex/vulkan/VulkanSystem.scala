@@ -57,8 +57,6 @@ class VulkanSystem(val name:String, val windowSize:Dimension, deviceName:String 
   val renderPass:RenderPass = initRenderPass()
 
   override def close(): Unit = {
-    device.await()
-
     renderPass.close()
     swapChain.close()
     device.close()

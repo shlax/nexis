@@ -1,17 +1,20 @@
 package org.vortex.vulkan.frame
 
-import org.vortex.vulkan.{CommandBuffer, Fence, Semaphore, VulkanSystem}
+import org.vortex.vulkan.{CommandBuffer, Fence, Semaphore, VulkanSystem, vkCheck}
 import org.lwjgl.vulkan.{VK10, VkCommandBuffer}
 
 abstract class RenderLoop(val system: VulkanSystem) extends AutoCloseable, Runnable{
 
-  protected def initImageAvailableSemaphore():Semaphore = Semaphore(system.device)
+  protected def initImageAvailableSemaphore(): Semaphore = Semaphore(system.device)
 
-  protected val imageAvailableSemaphore:Semaphore = initImageAvailableSemaphore()
+  protected val imageAvailableSemaphore: Semaphore = initImageAvailableSemaphore()
 
-  protected def initRenderFinishedSemaphore():Semaphore = Semaphore(system.device)
+  protected def initRenderFinishedSemaphore():Array[Semaphore] = {
+    val s = for (_ <- 0 until system.swapChain.imagesCount) yield Semaphore(system.device)
+    s.toArray
+  }
 
-  protected val renderFinishedSemaphore: Semaphore = initRenderFinishedSemaphore()
+  protected val renderFinishedSemaphore: Array[Semaphore] = initRenderFinishedSemaphore()
 
   protected def initInFlightFence():Fence = Fence(system.device)
 
@@ -34,14 +37,16 @@ abstract class RenderLoop(val system: VulkanSystem) extends AutoCloseable, Runna
       for (q <- next.presentResult) presentResult(q)
 
       val buff = record(next)
+      val ind = next.index
 
-      graphicsQueue.submit(buff, imageAvailableSemaphore, VK10.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, renderFinishedSemaphore, inFlightFence)
+      graphicsQueue.submit(buff, imageAvailableSemaphore, VK10.VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, renderFinishedSemaphore(ind), inFlightFence)
       //graphicsQueue.submit(cmdBuff, imageAvailableSemaphore, VK10.VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, renderFinishedSemaphore, Some(inFlightFence))
-      val res = swapChain.presentImage(next, renderFinishedSemaphore)
+      val res = swapChain.presentImage(next, renderFinishedSemaphore(ind))
       for (q <- res) presentResult(q)
 
     }
 
+    system.device.await()
   }
 
   protected def compute():Unit = {}
@@ -56,7 +61,7 @@ abstract class RenderLoop(val system: VulkanSystem) extends AutoCloseable, Runna
 
   override def close(): Unit = {
     inFlightFence.await().close()
-    renderFinishedSemaphore.close()
+    for(i <- renderFinishedSemaphore) i.close()
     imageAvailableSemaphore.close()
   }
 

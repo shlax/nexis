@@ -82,8 +82,13 @@ class Device(val instance: Instance, surface: Surface, deviceName:String = "") e
   }
 
   val presentQueue:Queue = initPresentQueue()
-  
+
   def await():Unit = {
+    if(presentQueue != graphicsQueue){
+      graphicsQueue.await()
+    }
+    presentQueue.await()
+
     vkCheck(VK10.vkDeviceWaitIdle(vkDevice))
   }
   

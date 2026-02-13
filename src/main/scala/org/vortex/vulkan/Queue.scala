@@ -54,4 +54,8 @@ class Queue(val device:Device, val familyIndex:Int, val index:Int) {
     signalFence
   }
 
+  def await():Unit = {
+    vkCheck( VK10.vkQueueWaitIdle(vkQueue) )
+  }
+
 }
