@@ -237,6 +237,7 @@ class SwapChain(val surface: Surface, device: Device, imageCount:Int = 0) extend
   override def close(): Unit = {
     vkDepthImageView.close()
     VK10.vkDestroyImage(device.vkDevice, vkDepthImage, null)
+
     super.close()
 
     KHRSwapchain.vkDestroySwapchainKHR(device.vkDevice, vkSwapChain, null)
