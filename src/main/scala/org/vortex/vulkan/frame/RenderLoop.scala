@@ -62,8 +62,8 @@ abstract class RenderLoop(val system: VulkanSystem) extends AutoCloseable, Runna
 
   override def close(): Unit = {
     inFlightFence.close()
-    for(i <- renderFinishedSemaphore) i.close()
     imageAvailableSemaphore.close()
+    for(i <- renderFinishedSemaphore) i.close()
   }
 
 }
