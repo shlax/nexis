@@ -32,8 +32,8 @@ object closeable {
     }
   }
 
-  class UsingManager extends AutoCloseable{
-    private var toClose:List[? <: AutoCloseable] = Nil
+  class UsingManager(from: List[? <: AutoCloseable] = Nil) extends AutoCloseable{
+    private var toClose:List[? <: AutoCloseable] = from.reverse
 
     def apply[T <: AutoCloseable](t:T):T = {
       toClose = t :: toClose
@@ -60,6 +60,12 @@ object closeable {
 
   def using[R](f: UsingManager => R): R = {
     UsingManager() | { m =>
+      f.apply(m)
+    }
+  }
+
+  def using[R](e: AutoCloseable*)(f: UsingManager => R): R = {
+    UsingManager(e.toList) | { m =>
       f.apply(m)
     }
   }
