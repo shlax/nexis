@@ -23,17 +23,17 @@ dependencies {
 
     implementation("org.l33tlabs.twl:pngdecoder:1.0")
 
-    implementation("org.lwjgl:lwjgl-glfw:3.4.1")
-    implementation("org.lwjgl:lwjgl-vulkan:3.4.1")
-    implementation("org.lwjgl:lwjgl-shaderc:3.4.1")
+    implementation("org.lwjgl:lwjgl-glfw:3.4.2")
+    implementation("org.lwjgl:lwjgl-vulkan:3.4.2")
+    implementation("org.lwjgl:lwjgl-shaderc:3.4.2")
 
-    runtimeOnly("org.lwjgl:lwjgl:3.4.1:natives-linux")
-    runtimeOnly("org.lwjgl:lwjgl-glfw:3.4.1:natives-linux")
-    runtimeOnly("org.lwjgl:lwjgl-shaderc:3.4.1:natives-linux")
+    runtimeOnly("org.lwjgl:lwjgl:3.4.2:natives-linux")
+    runtimeOnly("org.lwjgl:lwjgl-glfw:3.4.2:natives-linux")
+    runtimeOnly("org.lwjgl:lwjgl-shaderc:3.4.2:natives-linux")
 
-    runtimeOnly("org.lwjgl:lwjgl:3.4.1:natives-windows")
-    runtimeOnly("org.lwjgl:lwjgl-glfw:3.4.1:natives-windows")
-    runtimeOnly("org.lwjgl:lwjgl-shaderc:3.4.1:natives-windows")
+    runtimeOnly("org.lwjgl:lwjgl:3.4.2:natives-windows")
+    runtimeOnly("org.lwjgl:lwjgl-glfw:3.4.2:natives-windows")
+    runtimeOnly("org.lwjgl:lwjgl-shaderc:3.4.2:natives-windows")
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:6.1.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
